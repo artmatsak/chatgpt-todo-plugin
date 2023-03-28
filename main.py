@@ -41,21 +41,23 @@ async def plugin_logo():
 
 @app.get("/.well-known/ai-plugin.json")
 async def plugin_manifest():
+    proto = request.scheme
     host = request.headers['Host']
     with open("ai-plugin.json") as f:
         text = f.read()
         # This is a trick we do to populate the PLUGIN_HOSTNAME constant in the manifest
-        text = text.replace("PLUGIN_HOSTNAME", f"https://{host}")
+        text = text.replace("PLUGIN_HOSTNAME", f"{proto}://{host}")
         return quart.Response(text, mimetype="text/json")
 
 
 @app.get("/openapi.yaml")
 async def openapi_spec():
+    proto = request.scheme
     host = request.headers['Host']
     with open("openapi.yaml") as f:
         text = f.read()
         # This is a trick we do to populate the PLUGIN_HOSTNAME constant in the OpenAPI spec
-        text = text.replace("PLUGIN_HOSTNAME", f"https://{host}")
+        text = text.replace("PLUGIN_HOSTNAME", f"{proto}://{host}")
         return quart.Response(text, mimetype="text/yaml")
 
 
