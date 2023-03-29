@@ -35,11 +35,9 @@ async def get_todos(username):
     return quart.Response(response=json.dumps(_TODOS.get(username, [])), status=200)
 
 
-@app.delete("/todos/<string:username>")
-async def delete_todo(username):
+@app.delete("/todos/<string:username>/<int:todo_idx>")
+async def delete_todo(username, todo_idx):
     assert_auth_header(quart.request)
-    request = await quart.request.get_json(force=True)
-    todo_idx = request["todo_idx"]
     if 0 <= todo_idx < len(_TODOS[username]):
         _TODOS[username].pop(todo_idx)
     return quart.Response(response='OK', status=200)

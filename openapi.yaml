@@ -43,6 +43,7 @@ paths:
       responses:
         "200":
           description: OK
+  /todos/{username}/{todo_idx}:
     delete:
       operationId: deleteTodo
       summary: Delete a todo from the list
@@ -53,12 +54,12 @@ paths:
             type: string
         required: true
         description: The name of the user.
-      requestBody:
+      - in: path
+        name: todo_idx
+        schema:
+            type: integer
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/deleteTodoRequest'
+        description: The index of the todo to delete.
       responses:
         "200":
           description: OK
@@ -75,19 +76,9 @@ components:
           description: The list of todos.
     addTodoRequest:
       type: object
-      required:
-      - todo
       properties:
         todo:
           type: string
           description: The todo to add to the list.
-          required: true
-    deleteTodoRequest:
-      type: object
-      required:
-      - todo_idx
-      properties:
-        todo_idx:
-          type: integer
-          description: The index of the todo to delete.
-          required: true
+          required:
+            - todo
