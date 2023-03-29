@@ -5,7 +5,7 @@
     "description_for_human": "Plugin for managing a TODO list, you can add, remove and view your TODOs.",
     "description_for_model": "Plugin for managing a TODO list, you can add, remove and view your TODOs.",
     "auth": {
-        "type": "none"
+        "type": "PLUGIN_AUTH_TYPE"
     },
     "api": {
         "type": "openapi",
