@@ -11,7 +11,7 @@ AUTH_TYPE_NONE = "none"
 AUTH_TYPE_SERVICE_HTTP = "service_http"
 AUTH_TYPE_USER_HTTP = "user_http"
 
-_PLUGIN_AUTH_TYPE = AUTH_TYPE_USER_HTTP
+_PLUGIN_AUTH_TYPE = AUTH_TYPE_NONE
 # Auth token for "service_http" or "user_http" authentication
 _AUTH_KEY = "REPLACE_ME"
 # OpenAI verification token for "service_http" authentication
