@@ -6,7 +6,7 @@ This repository contains a simple ChatGPT plugin for managing a TODO list. The p
 * Ability to choose between three plugin authentication methods: `"none"`, `"service_http"` and `"user_http"`
 * Support for HTTP for local deployments.
 
-# Quick Start
+## Quick Start
 
 1. Install Python 3.9, if not already installed.
 2. Clone this repository.
@@ -25,7 +25,7 @@ _OPENAI_VERIFICATION_TOKEN = "REPLACE_ME"
 8. Run the plugin locally: `python3 main.py`
 9. The API will be available at `http://localhost:5002`.
 
-# Example Requests
+## Example Requests
 
 The request below will add a new item to the global TODO, without authentication.
 
