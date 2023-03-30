@@ -7,16 +7,22 @@ from quart import request
 # Note: Setting CORS to allow chat.openapi.com is required for ChatGPT to access your plugin
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
-# "none" and "user_http" are supported
-_PLUGIN_AUTH_TYPE = "none"
-_USER_AUTH_KEY = "REPLACE_ME"
+AUTH_TYPE_NONE = "none"
+AUTH_TYPE_SERVICE_HTTP = "service_http"
+AUTH_TYPE_USER_HTTP = "user_http"
+
+_PLUGIN_AUTH_TYPE = AUTH_TYPE_USER_HTTP
+# Auth token for "service_http" or "user_http" authentication
+_AUTH_KEY = "REPLACE_ME"
+# OpenAI verification token for "service_http" authentication
+_OPENAI_VERIFICATION_TOKEN = "REPLACE_ME"
 _TODOS = {}
 
 
 def assert_auth_header(req):
     if _PLUGIN_AUTH_TYPE == "user_http":
         assert req.headers.get(
-            "Authorization", None) == f"Bearer {_USER_AUTH_KEY}"
+            "Authorization", None) == f"Bearer {_AUTH_KEY}"
 
 
 @app.post("/todos/<string:username>")
@@ -55,9 +61,23 @@ async def plugin_manifest():
     host = request.headers['Host']
     with open("ai-plugin.json") as f:
         text = f.read()
-        # This is a trick we do to populate the constants in the manifest
-        text = text.replace("PLUGIN_AUTH_TYPE", _PLUGIN_AUTH_TYPE)
+
+        # This is a trick we do to populate the PLUGIN_HOSTNAME constant in the manifest
         text = text.replace("PLUGIN_HOSTNAME", f"{proto}://{host}")
+
+        # Insert auth specification
+        manifest = json.loads(text)
+        manifest["auth"] = {
+            "type": _PLUGIN_AUTH_TYPE
+        }
+        if _PLUGIN_AUTH_TYPE == AUTH_TYPE_SERVICE_HTTP or _PLUGIN_AUTH_TYPE == AUTH_TYPE_USER_HTTP:
+            manifest["auth"]["authorization_type"] = "bearer"
+            if _PLUGIN_AUTH_TYPE == AUTH_TYPE_SERVICE_HTTP:
+                manifest["auth"]["verification_tokens"] = {
+                    "openai": _OPENAI_VERIFICATION_TOKEN
+                }
+        text = json.dumps(manifest, indent=2)
+
         return quart.Response(text, mimetype="text/json")
 
 
